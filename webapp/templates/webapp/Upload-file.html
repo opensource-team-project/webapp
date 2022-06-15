@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django File Upload</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+        * {
+            font-family: "Roboto";
+        }
+
+        body {
+            background-color: #F5F5F5;
+        }
+
+        form {
+            background-color: #FFFFFF;
+            padding: 25px;
+        }
+
+        table {
+            width: 100%; 
+            text-align: center;
+            margin-top: 25px;
+            padding: 25px;
+            background-color: #FFFFFF;
+        }
+
+        table tr td {
+            padding-top: 15px;            
+        }
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>음악 업로드</h1>
+    {% if request.user.is_authenticated %}
+        <h3><a href="logout">로그아웃</a></h3>
+        <form action="{% url 'webapp:uploadFile' %}" method="POST" enctype="multipart/form-data">
+            <input type="text" name="fileTitle" placeholder="음악 제목을 입력하세요.">
+            <input type="file" name="uploadedFile">
+            {% csrf_token %}
+            <input type="submit" value="Upload">
+        </form>
+    {% else %}
+        <p>로그인 후 업로드 가능합니다.<br><br>
+            회원이 아니라면 --> <button type = "button" onclick= "location.href='/home/signup'">회원가입</button><br><br>
+            이미 회원이라면 --><button type = "button" onclick ="location.href='/home/login'" >로그인</button>
+        </p>
+    {% endif %}
+    <table>
+        <tr>
+            <th>uploader</th>
+            <th>Title</th>
+            <th>Upload Date & Time</th>
+            <th>play audio</th>
+
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.writter }}</td>
+                <td>{{ file.title }}</td>
+                <td>{{ file.dateTimeOfUpload }}</td>
+                <td><audio controls><source src="{{file.uploadedFile.url}}" type="audio/wav"></audio></td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
