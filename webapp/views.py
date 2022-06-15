@@ -15,12 +15,7 @@ def signup(request):
                                             email=request.POST['email'],)
             auth.login(request, user)
 
-            userinfo = models.User(
-                Username = user.username,
-                Password = user.password,
-                Email=user.email
-            )
-            userinfo.save()
+        
             
 
 
@@ -62,7 +57,7 @@ def uploadFile(request):
         document = models.Document(
             title = fileTitle,
             uploadedFile = uploadedFile,
-            writter = User.objects.first()
+            writter = User.objects.last()
         )
         document.save()
 
